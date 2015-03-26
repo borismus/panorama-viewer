@@ -147,6 +147,9 @@
 		var effect = new THREE.VREffect( renderer );
 		var controls = new THREE.VRControls( camera );
 
+    // Create a VR manager helper to enter and exit VR mode.
+    var vrmgr = new WebVRManager(effect);
+
     effect.setSize( window.innerWidth, window.innerHeight );
 
 		// title text
@@ -296,7 +299,12 @@
 			if (typeof controls.update == 'function') {
 				controls.update();
 			}
-			effect.render( scene, camera );
+      // Render the scene through the VREffect, but only if it's in VR mode.
+      if (vrmgr.isVRMode()) {
+        effect.render(scene, camera);
+      } else {
+        renderer.render(scene, camera);
+      }
 		}
 
 		// kick off animation
