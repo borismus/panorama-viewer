@@ -16,13 +16,13 @@
 		</style>
 	</head>
 	<body>
-		<script src="js/three.min.js"></script>
-		<script src="js/tween.min.js"></script>
-		<script src="js/VRControls.js"></script>
-		<script src="js/VREffect.js"></script>
-		<script src="js/DeviceOrientationControls.js"></script>
-		<script src="js/StereoEffect.js"></script>
-		<script src="js/OrbitControls.js"></script>
+		<script src="js/deps/three.min.js"></script>
+		<script src="js/deps/tween.min.js"></script>
+		<script src="js/deps/VRControls.js"></script>
+		<script src="js/deps/VREffect.js"></script>
+    <script src="js/deps/webvr-polyfill.js"></script>
+    <script src="js/deps/webvr-manager.js"></script>
+
 		<script>
 
 		// parse URL parameters
@@ -40,6 +40,16 @@
 
 		// define all the different panoramas we will use.
 		var panos = [
+      {
+				"title": "Tahoe",
+				"details": "Tahoe",
+				"owner": "Boris Smus",
+				"overlay": "puydesancy-overlay.png",
+				"image": "tahoe-beach.jpg",
+				"audio": "235428__allanz10d__calm-ocean-breeze-simulation.ogg",
+				"source": "http://bit.ly/1xk9Vk1",
+				"license": "Creative Commons"
+			},
 			{
 				"title": "En route pour le Puy de Sancy",
 				"details": "Equirectangular panorama built from 10 pictures, shot handheld.",
@@ -134,48 +144,10 @@
 		camera.position.z = 0.0001;
 
 		// Effect and Controls for VR
-		var vrEffect = new THREE.VREffect( renderer );
-		var vrControls = new THREE.VRControls( camera );
+		var effect = new THREE.VREffect( renderer );
+		var controls = new THREE.VRControls( camera );
 
-		// Effect for cardboard
-		var cbControls = new THREE.DeviceOrientationControls( camera );
-		var cbEffect = new THREE.StereoEffect( renderer );
-
-		// Use OrbitControls for mono mode.
-		var monoControls = new THREE.OrbitControls( camera );
-
-		var controls, effect;
-
-		function changeMode(mode) {
-			console.log('changing mode: ' + mode);
-			switch(mode) {
-				case 'mono':
-					effect = renderer;
-					controls = monoControls;
-					break;
-				case 'vr':
-					controls = vrControls;
-					effect = vrEffect;
-					break;
-				case 'stereo':
-					controls = cbControls;
-					effect = cbEffect;
-					break;
-			}
-			effect.setSize( window.innerWidth, window.innerHeight );
-		};
-
-		if (parameters.mode) {
-			changeMode(parameters.mode);
-		} else {
-			changeMode('mono');
-		}
-
-
-
-		// add background sound
-		// var listener = new THREE.AudioListener();
-		// camera.add( listener );
+    effect.setSize( window.innerWidth, window.innerHeight );
 
 		// title text
 		overlay = new THREE.Object3D();
@@ -326,14 +298,6 @@
 			}
 			effect.render( scene, camera );
 		}
-
-		function handlePostmessage(e) {
-			if (e.data.mode) {
-				changeMode(e.data.mode);
-			}
-	  }
-
-  	window.addEventListener('message', handlePostmessage);
 
 		// kick off animation
 		animate();
