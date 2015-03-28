@@ -4,6 +4,9 @@
 		<title>Panorama Viewer</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 		<style>
 			html, body {
 				background-color: #000;
@@ -21,6 +24,7 @@
 		<script src="js/deps/VREffect.js"></script>
     <script src="js/deps/webvr-polyfill.js"></script>
     <script src="js/deps/webvr-manager.js"></script>
+    <script src="js/photosphere-loader.js"></script>
 
 		<script>
 
@@ -78,8 +82,7 @@
 		];
 
 
-		var counter = 1;
-		var pano, overlay;
+		var counter = 0;
 
 		var renderer = new THREE.WebGLRenderer({ antialias: true });
 		renderer.setClearColor( 0x000000 );
@@ -101,8 +104,11 @@
     effect.setSize( window.innerWidth, window.innerHeight );
 
 		function loadPano() {
-			var imgPano = 'images/' + panos[counter].image;
-      pano.material.map = THREE.ImageUtils.loadTexture(imgPano, THREE.UVMapping, null)
+			var src = 'images/' + panos[counter].image;
+      pano.material.map = THREE.ImageUtils.loadTexture(src, THREE.UVMapping, null);
+
+      var loader = new PhotosphereLoader();
+      loader.load(src);
 		};
 
     // panorma mesh
